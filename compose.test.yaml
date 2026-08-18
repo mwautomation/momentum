@@ -13,8 +13,8 @@ services:
       - -c
       - >-
         alembic upgrade head &&
-        ruff check app alembic tests &&
-        ruff format --check app alembic tests &&
-        pytest
+        ruff check --no-cache app alembic tests &&
+        ruff format --no-cache --check app alembic tests &&
+        pytest -p no:cacheprovider
     security_opt:
       - no-new-privileges:true
