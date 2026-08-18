@@ -1,0 +1,20 @@
+services:
+  tests:
+    build:
+      context: .
+      target: test
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-library}:${POSTGRES_PASSWORD:-library-local}@db:5432/${POSTGRES_DB:-library}
+    depends_on:
+      db:
+        condition: service_healthy
+    command:
+      - sh
+      - -c
+      - >-
+        alembic upgrade head &&
+        ruff check app alembic tests &&
+        ruff format --check app alembic tests &&
+        pytest
+    security_opt:
+      - no-new-privileges:true
